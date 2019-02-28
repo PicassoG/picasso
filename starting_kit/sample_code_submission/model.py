@@ -11,7 +11,9 @@ import numpy as np   # We recommend to use numpy arrays
 from os.path import isfile
 from sklearn.base import BaseEstimator
 from sklearn import tree
-from sklearn.linear_model import LogisticRegression
+#from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import GradientBoostingClassifier
+
 class model (BaseEstimator):
     def __init__(self):
         '''
@@ -22,7 +24,10 @@ class model (BaseEstimator):
         self.num_feat=1
         self.num_labels=1
         self.is_trained=False
-        self.model = clf = LogisticRegression(random_state=0, solver='lbfgs', multi_class='ovr')
+        #self.model = clf = LogisticRegression(solver='lbfgs', multi_class='ovr',penalty='l2',tol=1e-5,C=2.365,class_weight='balanced',max_iter=1000,random_state=0)
+        self.model = clf = GradientBoostingClassifier(n_estimators=120, learning_rate=0.7,max_depth=2, random_state=0)
+
+        
     def fit(self, X, y):
         '''
         This function should train the model parameters.
