@@ -25,7 +25,7 @@ class model (BaseEstimator):
         self.num_labels=1
         self.is_trained=False
         #self.model = clf = LogisticRegression(solver='lbfgs', multi_class='ovr',penalty='l2',tol=1e-5,C=2.365,class_weight='balanced',max_iter=1000,random_state=0)
-        self.model = clf = GradientBoostingClassifier(n_estimators=120, learning_rate=0.7,max_depth=2, random_state=0)
+        self.model = clf = GradientBoostingClassifier(n_estimators=150, learning_rate=1.0,max_depth=3, random_state=0)
 
         
     def fit(self, X, y):
