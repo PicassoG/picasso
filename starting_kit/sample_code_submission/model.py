@@ -14,6 +14,96 @@ from sklearn import tree
 #from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import GradientBoostingClassifier
 
+from sklearn.pipeline import Pipeline
+from sklearn.svm import SVC
+from sklearn.decomposition import PCA
+from sklearn.feature_selection import SelectKBest
+
+class Preprocessor(BaseEstimator): #VERSION 1
+    def __init__(self):
+        self.transformer = PCA(n_components=100) #reduit le nombre de features de 200 à 100
+        clf = svm.SVC(kernel='linear') #classifieur lineaire
+    
+    #application de la méthode pipeline
+    def fit(self, X_train, Y_train):
+        Pipeline(memory=None,steps=[('reduc dim', self.transformer), ('calssif svc', clf)])
+            
+    def fit_transform(self, X, Y):
+        return self.transformer.fit_transform(X,Y)
+    
+    def transform(self, X, y=None):
+        return self.transformer.transform(X)
+    
+
+
+
+
+                                    
+    """
+    class Preprocessor(BaseEstimator): VERSION DANS LE RAPPORT
+        
+        classifier = svm.SVC()
+        """<Choix CLASSIFIER>"""
+        n_pca=1
+        n_skb=1
+        def __init__(self, transformer=identity):
+            self.transformer = self
+        
+        
+        def fit(self, X, y=None):
+            y_train = X['target'].values
+            X_train = X.drop('target', axis=1).values
+        
+        PCAPip = Pipeline([('pca',PCA()),('SKB',SelectKBest()),('clf',self.classifier)])
+            self.classifier.fit(X_train,y_train)
+            t = []
+            i=20
+            while i <int(100):
+                t.append(i)
+                i+=15
+            tab = []
+            for j in range(5,20):
+            tab.append(j+1)
+        grid_search = GridSearchCV(PCAPip{'pca__n_components':t,'SKB__k':tab},verbose=1,scoring=make_scorer(accuracy_score))
+            grid_search.fit(X_train,y_train)
+            
+        self.n_pca=grid_search.best_params_.get('pca__n_components')
+            self.n_skb=grid_search.best_params_.get('SKB__k')
+            return self
+
+
+       def fit_transform(self, X, y=None):
+            return self.fit(X).transform(X)
+
+
+        def transform(self, X, y=None):
+            y_train = X['target'].values
+            X_train = X.drop('target', axis=1).values
+            sel = VarianceThreshold(threshold=(0.05))
+            X_train = sel.fit_transform(X_train)
+            scaler=StandardScaler()
+            X_train=scaler.fit_transform(X_train)
+            pca = PCA(n_components=self.n_pca)
+            kbest=SelectKBest(k=self.n_skb)
+            X_train=pca.fit_transform(X_train)
+            X_train=kbest.fit_transform(X_train,y_train)
+            return X_train
+
+    if __name__=="__main__":
+        print(data.shape)
+        Y_train = data['target'].values
+        X_train = data.drop('target', axis=1).values
+        print("*** Original data ***")
+        print data
+
+        Prepro = Preprocessor()
+        data = Prepro.fit_transform(data)
+        print("*** Transformed data ***")
+        print data
+        print(len(data),"x",len(data[0]))
+"""
+
+
 class model (BaseEstimator):
     def __init__(self):
         '''
@@ -24,8 +114,8 @@ class model (BaseEstimator):
         self.num_feat=1
         self.num_labels=1
         self.is_trained=False
-        #self.model = clf = LogisticRegression(solver='lbfgs', multi_class='ovr',penalty='l2',tol=1e-5,C=2.365,class_weight='balanced',max_iter=1000,random_state=0)
-        self.model = clf = GradientBoostingClassifier(n_estimators=170, learning_rate=0.8,max_depth=3, random_state=0)
+        self.model = clf = LogisticRegression(solver='lbfgs', multi_class='ovr',penalty='l2',tol=1e-5,C=2.365,class_weight='balanced',max_iter=1000,random_state=0)
+        #self.model = clf = GradientBoostingClassifier(n_estimators=170, learning_rate=0.8,max_depth=3, random_state=0)
 
         
     def fit(self, X, y):
